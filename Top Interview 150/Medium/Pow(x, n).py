@@ -7,19 +7,23 @@ class Solution(object):
         """
         if n == 0:
             return 1
-        total = 1
-        if n > 0:
-            for _ in range(n):
-                total *= x
-        else:
-            for _ in range(-n):
-                total /= x
         
-        return total
+        is_positive = True
+        if n < 0:
+            is_positive = False
+            n = ~n+1
+        
+        result = 1
+        while n > 0:
+            if n & 1:
+                result *= x
+            x *= x
+            n >>= 1
+        return result if is_positive else 1 / result 
 
 
 if __name__ == "__main__":
     sol = Solution()
-    x = 0.00001
-    n = 2147483647
+    x = 2
+    n = -2
     print(sol.myPow(x, n))
