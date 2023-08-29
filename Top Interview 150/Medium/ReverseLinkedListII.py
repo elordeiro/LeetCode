@@ -41,12 +41,6 @@ class Solution(object):
         return head
     
     
-
-
-
-
-
-
 def printList(head):
     if head is None:
         return

@@ -5,41 +5,51 @@ class Solution(object):
         :type word2: str
         :rtype: int
         """
-        memo = {}
+        m, n = len(word1), len(word2)
+        dp = [[0] * (n + 1) for _ in range(m + 1)]
 
-        def solve(w1, w2, steps):
-            if len(w1) > len(word1):
-                return 
-            if w1 == w2:
-                return steps
-            for i in range(len(w1)):
-                new_w1 = w1
-                
-                new_w1 = w1[:i + steps] + w2[min(i + steps, len(w2) - 1)] + w1[i + steps + 1:]
-                replace = solve(new_w1, w2, steps + 1)
-                
-                new_w1 = w1
-                new_w1 = w1[:i + steps] + w1[i + steps + 1:]
-                delete = solve(new_w1, w2, steps + 1)
-
-                new_w1 = w1
-                new_w1 = w1[:i + steps] + w2[min(i + steps, len(w2) - 1)] + w1[i + steps:]
-                insert  = solve(new_w1, w2, steps + 1)
-                
-                if w1 not in memo:
-                    memo[w1] = min(replace, delete, insert)
+        for i in range(m + 1):
+            dp[i][0] = i
+        for j in range(n + 1):
+            dp[0][j] = j
+        
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                if word1[i - 1] == word2[j - 1]:
+                    dp[i][j] = dp[i - 1][j - 1]
                 else:
-                    memo[w1] = min(memo[w1], replace, delete, insert)
-            return memo[w1]
+                    dp[i][j] = min(dp[i - 1][j - 1], dp[i][j - 1], dp[i - 1][j]) + 1
 
-        solve(word1, word2, 0)
-        return memo[word1]
-
-
+        return dp[m][n]
 
 
 if __name__ == "__main__":
     sol = Solution()
-    word1, word2 = "intention", "execution" # 5
-    word1, word2 = "horse", "ros"           # 3
-    print(sol.minDistance(word1, word2))
+    tests =  [
+              ("horse", "ros", 3),
+              ("", "a", 1),
+              ("ab", "a", 1),
+              ("park", "spake", 3),
+              ("intention", "execution", 5),
+              ("ab", "bc", 2),
+              ("dinitrophenylhydrazine", "dimethylhydraz, ", 10),
+            ]
+    res = []
+    failed = []
+    ok = True
+    for i, test in enumerate(tests, start=1):
+        word1, word2, expected = test
+        actual = sol.minDistance(word1, word2)
+        res.append((expected, actual))
+        if expected != actual:
+            ok = False
+            failed.append((i, expected, actual))
+    if ok:
+        print("Passed All Tests")
+    else:
+        print("Failed Tests:")
+        for fail in failed:
+            test_num, expected, actual = fail
+            print(f"Test Number: {test_num}, Expected: {expected}, Actual: {actual}")
+        print()
+    print(res)
