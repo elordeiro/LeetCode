@@ -1,12 +1,3 @@
 {
-    "configurations": [
-        {
-            "type": "java",
-            "name": "MaxPointsOnALine",
-            "request": "launch",
-            "mainClass": "MaxPointsOnALine",
-            "projectName": "LeetCode_b286006a"
-        }
-    ]
 
 }
